@@ -1,0 +1,7 @@
+---
+
+  - name: copy app source
+    copy: src=demo/app/ dest=/var/www/html mode=0755
+    notify: restart apache2
+    tags: demo_app
+

@@ -1,0 +1,54 @@
+---
+
+- name: download remi-mysql repo
+  get_url: url=rpm -ivh mysql-community-release-el7-5.noarch.rpm
+  tags: mysql
+
+# - name: install remi-mysql repo
+#   shell: /bin/rpm -Uvh /tmp/compat-mysql5.5.11.remi.rpm
+#   register: remi_mysql_repo_result
+#   failed_when: "'conflict' in remi_mysql_repo_result.stderr"
+#   tags: mysql
+
+- name: install MySQL
+  yum: name={{item}} state=present
+  loop: ['mysql-server','MySQL-python']
+  tags:
+  - mysql
+  - mysql-service
+
+# - name: Install MySQL
+#   action: yum name={{ item }} state=present
+#   loop: ['MySQL-python','mysql','mysql-server','gcc-c++']
+
+- name: run MySQL
+  service: name=mysqld state=started enabled=yes
+  tags:
+  - mysql
+  - mysql-service
+
+- name: create mysql database
+  mysql_db: name={{ db_name }} state=present
+  tags:
+  - mysql
+  - mysql-db
+
+- name: create db user
+  mysql_user: name={{ db_user_name}} password={{ db_user_pass}} priv=demo.*:ALL host='%' state=present
+  tags:
+  - mysql
+  - mysql-user
+
+
+
+# - name: bind mysql remote address
+#   ini_file: dest=/etc/my.cnf
+#             section=mysqld
+#             option=bind-address
+#             value={{item}}
+#   with_items: mysql.bind
+#   tags:
+#   - mysql
+#   - mysql-configure
+#   notify:
+#   - restart mysql

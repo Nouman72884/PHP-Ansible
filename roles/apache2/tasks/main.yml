@@ -1,0 +1,8 @@
+---
+  - include_tasks: Debian.yml
+    when: ansible_os_family == "Debian"
+    tags: ['install apache2','service apache2']
+
+  - include_tasks: RedHat.yml
+    when: ansible_os_family == "RedHat"
+    tags: ['install apache2','service apache2']

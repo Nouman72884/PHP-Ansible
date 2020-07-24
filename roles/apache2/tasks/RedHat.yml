@@ -1,0 +1,15 @@
+---
+  - name: install apache2
+    yum: name={{ item }} state=latest update_cache=yes
+    loop: ['httpd','mod24_wsgi']
+    tags: apache2
+
+  - name: ensure apache2 started
+    service: name=httpd state=started enabled=yes
+    tags: httpd
+
+
+  # - name: ensure mod_wsgi enabled
+  #   apache2_module: state=present name=wsgi
+  #   notify: restart apache2
+  #   tags: wsgi-enabled
